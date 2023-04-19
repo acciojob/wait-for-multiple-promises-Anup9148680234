@@ -1,14 +1,12 @@
 //your JS code here. If required.
 const tableBody = document.querySelector("#output");
 
-// Create three Promises that resolve after a random time between 1 and 3 seconds
 const promises = [
   new Promise((resolve) => setTimeout(() => resolve("Promise 1"), Math.floor(Math.random() * 3000) + 1000)),
   new Promise((resolve) => setTimeout(() => resolve("Promise 2"), Math.floor(Math.random() * 3000) + 1000)),
   new Promise((resolve) => setTimeout(() => resolve("Promise 3"), Math.floor(Math.random() * 3000) + 1000)),
 ];
 
-// Add a row that spans 2 columns with the text "Loading..."
 const loadingRow = document.createElement("tr");
 const loadingCell = document.createElement("td");
 loadingCell.setAttribute("colspan", "2");
@@ -16,13 +14,11 @@ loadingCell.textContent = "Loading...";
 loadingRow.appendChild(loadingCell);
 tableBody.appendChild(loadingRow);
 
-// Use Promise.all to wait for all the Promises to resolve
+
+const startTime = new Date();
 Promise.all(promises)
   .then((results) => {
-    // Remove the loading row
     tableBody.removeChild(loadingRow);
-
-    // Create a row for each Promise result
     results.forEach((result) => {
       const row = document.createElement("tr");
       const promiseCell = document.createElement("td");
@@ -34,7 +30,6 @@ Promise.all(promises)
       tableBody.appendChild(row);
     });
 
-    // Calculate total time taken and add a row for it
     const totalTimeRow = document.createElement("tr");
     const totalTimeCell = document.createElement("td");
     const totalDuration = (new Date() - startTime) / 1000;
@@ -43,5 +38,3 @@ Promise.all(promises)
     totalTimeRow.appendChild(totalTimeCell);
     tableBody.appendChild(totalTimeRow);
   });
-
-const startTime = new Date();
