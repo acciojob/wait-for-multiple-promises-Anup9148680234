@@ -1,40 +1,44 @@
-//your JS code here. If required.
-const tableBody = document.querySelector("#output");
+const table = document.querySelector('table tbody');
 
-const promises = [
-  new Promise((resolve) => setTimeout(() => resolve("Promise 1"), Math.floor(Math.random() * 3000) + 1000)),
-  new Promise((resolve) => setTimeout(() => resolve("Promise 2"), Math.floor(Math.random() * 3000) + 1000)),
-  new Promise((resolve) => setTimeout(() => resolve("Promise 3"), Math.floor(Math.random() * 3000) + 1000)),
-];
+const promise1 = new Promise((resolve) => {
+  const time = Math.random() * 2000 + 1000;
+  setTimeout(() => resolve(time), time);
+});
 
-const loadingRow = document.createElement("tr");
-const loadingCell = document.createElement("td");
-loadingCell.setAttribute("colspan", "2");
-loadingCell.textContent = "Loading...";
-loadingRow.appendChild(loadingCell);
-tableBody.appendChild(loadingRow);
+const promise2 = new Promise((resolve) => {
+  const time = Math.random() * 2000 + 1000;
+  setTimeout(() => resolve(time), time);
+});
 
+const promise3 = new Promise((resolve) => {
+  const time = Math.random() * 2000 + 1000;
+  setTimeout(() => resolve(time), time);
+});
 
-const startTime = new Date();
-Promise.all(promises)
-  .then((results) => {
-    tableBody.removeChild(loadingRow);
-    results.forEach((result) => {
-      const row = document.createElement("tr");
-      const promiseCell = document.createElement("td");
-      const timeCell = document.createElement("td");
-      promiseCell.textContent = result;
-      timeCell.textContent = (new Date() - startTime) / 1000; // Calculate time taken in seconds
-      row.appendChild(promiseCell);
-      row.appendChild(timeCell);
-      tableBody.appendChild(row);
-    });
+Promise.all([promise1, promise2, promise3])
+  .then((times) => {
+    const total = times.reduce((acc, curr) => acc + curr, 0);
+    const totalSeconds = total / 1000;
 
-    const totalTimeRow = document.createElement("tr");
-    const totalTimeCell = document.createElement("td");
-    const totalDuration = (new Date() - startTime) / 1000;
-    totalTimeCell.setAttribute("colspan", "2");
-    totalTimeCell.textContent = `Total: ${totalDuration.toFixed(3)}s`;
-    totalTimeRow.appendChild(totalTimeCell);
-    tableBody.appendChild(totalTimeRow);
+    table.innerHTML = `
+      <tr>
+        <td>Promise 1</td>
+        <td>${(times[0] / 1000).toFixed(3)}</td>
+      </tr>
+      <tr>
+        <td>Promise 2</td>
+        <td>${(times[1] / 1000).toFixed(3)}</td>
+      </tr>
+      <tr>
+        <td>Promise 3</td>
+        <td>${(times[2] / 1000).toFixed(3)}</td>
+      </tr>
+      <tr>
+        <td>Total</td>
+        <td>${totalSeconds.toFixed(3)}</td>
+      </tr>
+    `;
+  })
+  .catch((error) => {
+    console.error(error);
   });
